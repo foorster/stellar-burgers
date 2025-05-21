@@ -7,10 +7,12 @@ import {
 import { combineReducers } from 'redux';
 import userReducer from './user/slice';
 import ingredientReducer from './ingredients/slice';
+import { constructorReducer } from './burger-constructor/slice';
 
 const rootReducer = combineReducers({
   user: userReducer,
-  ingredients: ingredientReducer
+  ingredients: ingredientReducer,
+  burgers: constructorReducer
 });
 
 export const store = configureStore({

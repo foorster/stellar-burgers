@@ -5,6 +5,7 @@ import { TTabMode } from '@utils-types';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
 import { Preloader } from '@ui';
 import { getIngredientState } from '../../services/ingredients/slice';
+import { TConstructorIngredient } from '@utils-types';
 export type TIngredient = {
   type: 'bun' | 'sauce' | 'main';
 };

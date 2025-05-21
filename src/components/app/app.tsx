@@ -6,7 +6,8 @@ import {
   useNavigate,
   Outlet
 } from 'react-router-dom';
-
+import { useEffect } from 'react';
+import { useDispatch } from '../../services/store';
 import '../../index.css';
 import styles from './app.module.css';
 
@@ -26,15 +27,21 @@ import {
 // Components
 import { AppHeader, Modal, IngredientDetails, OrderInfo } from '@components';
 
+import { getIngredients } from '../../services/ingredients/slice';
 // ProtectedRoute
 import ProtectedRoute from '../../components/protected-route/ProtectedRoute';
 
 const App = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const backgroundLocation = location.state?.background;
 
   const handleModalClose = () => navigate(-1);
+
+  useEffect(() => {
+    dispatch(getIngredients());
+  }, [dispatch]);
 
   return (
     <div className={styles.app}>

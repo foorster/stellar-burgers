@@ -20,12 +20,26 @@ const initialState: IngredientsState = {
 export const getIngredients = createAsyncThunk<TIngredient[], void>(
   'ingredients/getAll',
   async (_, { rejectWithValue }) => {
+    console.log('getIngredients: createAsyncThunk - STARTED');
     try {
-      return await getIngredientsApi();
-    } catch (error) {
-      return rejectWithValue(
-        error instanceof Error ? error.message : 'Failed to fetch ingredients'
+      console.log(
+        'getIngredients: createAsyncThunk - Calling getIngredientsApi'
       );
+      const result = await getIngredientsApi();
+      console.log(
+        'getIngredients: createAsyncThunk - getIngredientsApi returned:',
+        result
+      );
+      return result;
+    } catch (error) {
+      console.error('getIngredients: createAsyncThunk - ERROR:', error);
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to fetch ingredients';
+      console.log(
+        'getIngredients: createAsyncThunk - Rejecting with value:',
+        errorMessage
+      );
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -37,14 +51,23 @@ const ingredientsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getIngredients.pending, (state) => {
+        console.log('getIngredients.pending - Action dispatched');
         state.loading = true;
         state.error = null;
       })
       .addCase(getIngredients.rejected, (state, action) => {
+        console.log(
+          'getIngredients.rejected - Action dispatched, payload:',
+          action.payload
+        );
         state.loading = false;
         state.error = action.payload as string;
       })
       .addCase(getIngredients.fulfilled, (state, action) => {
+        console.log(
+          'getIngredients.fulfilled - Action dispatched, payload:',
+          action.payload
+        );
         state.loading = false;
         state.ingredients = action.payload;
         state.error = null;

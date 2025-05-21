@@ -3,8 +3,23 @@ import { TIngredient, TOrder, TOrdersData, TUser } from './types';
 
 const URL = process.env.BURGER_API_URL;
 
-const checkResponse = <T>(res: Response): Promise<T> =>
-  res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
+const checkResponse = <T>(res: Response): Promise<T> => {
+  console.group(`[API] Ответ от сервера: ${res.url}`);
+  console.log('Статус:', res.status, res.statusText);
+  if (res.ok) {
+    return res.json().then((data) => {
+      console.log('Данные:', data);
+      console.groupEnd();
+      return data;
+    });
+  } else {
+    return res.json().then((err) => {
+      console.error('Ошибка при запросе:', err);
+      console.groupEnd();
+      return Promise.reject(err);
+    });
+  }
+};
 
 type TServerResponse<T> = {
   success: boolean;
@@ -71,13 +86,28 @@ type TOrdersResponse = TServerResponse<{
   data: TOrder[];
 }>;
 
-export const getIngredientsApi = () =>
-  fetch(`${URL}/ingredients`)
-    .then((res) => checkResponse<TIngredientsResponse>(res))
+export const getIngredientsApi = () => {
+  console.log('getIngredientsApi вызвана');
+  console.log('URL:', URL);
+  return fetch(`${URL}/ingredients`)
+    .then((res) => {
+      console.log('fetch then res:', res);
+      return checkResponse<TIngredientsResponse>(res);
+    })
     .then((data) => {
-      if (data?.success) return data.data;
+      console.log('fetch then data:', data);
+      if (data?.success) {
+        console.log('Данные получены успешно:', data.data);
+        return data.data;
+      }
+      console.log('Ошибка: success === false');
       return Promise.reject(data);
+    })
+    .catch((err) => {
+      console.error('fetch catch err:', err);
+      return Promise.reject(err);
     });
+};
 
 export const getFeedsApi = () =>
   fetch(`${URL}/orders/all`)
