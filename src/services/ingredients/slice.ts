@@ -3,29 +3,26 @@ import { getIngredientsApi } from '@api';
 import type { TIngredient } from '@utils-types';
 import type { RootState } from '../../services/store';
 
-export type Nullable<T> = T | null;
-export type StateError = Nullable<string>;
+// Интерфейс для состояния ингредиентов
 interface IngredientsState {
   ingredients: TIngredient[];
   loading: boolean;
-  error: StateError;
+  error: string | null;
 }
 
+// Начальное состояние ингредиентов
 const initialState: IngredientsState = {
   ingredients: [],
   loading: false,
   error: null
 };
 
+// Асинхронный санк для получения списка ингредиентов
 export const getIngredients = createAsyncThunk<TIngredient[], void>(
-  'ingredients/getAll',
+  'ingredients/getIngredients', // Уникальный идентификатор санка
   async (_, { rejectWithValue }) => {
-    console.log('getIngredients: createAsyncThunk - STARTED');
     try {
-      console.log(
-        'getIngredients: createAsyncThunk - Calling getIngredientsApi'
-      );
-      const result = await getIngredientsApi();
+      const result = await getIngredientsApi(); // Запрашиваем ингредиенты с сервера
       console.log(
         'getIngredients: createAsyncThunk - getIngredientsApi returned:',
         result
@@ -34,40 +31,33 @@ export const getIngredients = createAsyncThunk<TIngredient[], void>(
     } catch (error) {
       console.error('getIngredients: createAsyncThunk - ERROR:', error);
       const errorMessage =
-        error instanceof Error ? error.message : 'Failed to fetch ingredients';
+        error instanceof Error ? error.message : 'Failed to fetch ingredients'; // Получаем сообщение об ошибке
       console.log(
         'getIngredients: createAsyncThunk - Rejecting with value:',
         errorMessage
       );
-      return rejectWithValue(errorMessage);
+      return rejectWithValue(errorMessage); // Отклоняем санк с сообщением об ошибке
     }
   }
 );
 
+// Создаем slice для управления состоянием ингредиентов
 const ingredientsSlice = createSlice({
   name: 'ingredients',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    // Обрабатываем состояния асинхронного санка
     builder
       .addCase(getIngredients.pending, (state) => {
-        console.log('getIngredients.pending - Action dispatched');
         state.loading = true;
         state.error = null;
       })
       .addCase(getIngredients.rejected, (state, action) => {
-        console.log(
-          'getIngredients.rejected - Action dispatched, payload:',
-          action.payload
-        );
         state.loading = false;
         state.error = action.payload as string;
       })
       .addCase(getIngredients.fulfilled, (state, action) => {
-        console.log(
-          'getIngredients.fulfilled - Action dispatched, payload:',
-          action.payload
-        );
         state.loading = false;
         state.ingredients = action.payload;
         state.error = null;
@@ -75,8 +65,7 @@ const ingredientsSlice = createSlice({
   }
 });
 
+// Селектор для получения состояния ингредиентов из корневого состояния
 export const getIngredientState = (state: RootState) => state.ingredients;
 
 export default ingredientsSlice.reducer;
-
-export const { reducer: ingredientReducer } = ingredientsSlice;

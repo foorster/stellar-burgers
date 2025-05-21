@@ -14,7 +14,6 @@ import {
 import { deleteCookie, setCookie } from './cookie';
 
 //Обрабатывает ответ от сервера при авторизации/регистрации
-
 const handleAuthResponse = (data: {
   success: boolean;
   accessToken: string;

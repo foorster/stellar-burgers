@@ -1,17 +1,9 @@
 import React from 'react';
-import {
-  Route,
-  Routes,
-  useLocation,
-  useNavigate,
-  Outlet
-} from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDispatch } from '../../services/store';
 import '../../index.css';
 import styles from './app.module.css';
-
-// Pages
 import {
   ConstructorPage,
   Feed,
@@ -23,20 +15,16 @@ import {
   ProfileOrders,
   NotFound404
 } from '@pages';
-
-// Components
 import { AppHeader, Modal, IngredientDetails, OrderInfo } from '@components';
-
 import { getIngredients } from '../../services/ingredients/slice';
-// ProtectedRoute
 import ProtectedRoute from '../../components/protected-route/ProtectedRoute';
 
 const App = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const backgroundLocation = location.state?.background;
 
+  const backgroundLocation = location.state?.background;
   const handleModalClose = () => navigate(-1);
 
   useEffect(() => {
@@ -46,14 +34,9 @@ const App = () => {
   return (
     <div className={styles.app}>
       <AppHeader />
-
-      {/* Основные маршруты */}
       <Routes location={backgroundLocation || location}>
-        {/* Общие страницы */}
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
-
-        {/* Защищённые страницы только для НЕ авторизованных */}
         <Route
           path='/login'
           element={
@@ -86,8 +69,6 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-
-        {/* Профиль пользователя — защищённый маршрут с вложенными путями */}
         <Route
           path='/profile'
           element={
@@ -107,7 +88,6 @@ const App = () => {
           />
         </Route>
 
-        {/* Детали без модального окна */}
         <Route path='/ingredients/:id' element={<IngredientDetails />} />
         <Route path='/feed/:number' element={<OrderInfo />} />
         <Route
@@ -119,11 +99,9 @@ const App = () => {
           }
         />
 
-        {/* 404 */}
         <Route path='*' element={<NotFound404 />} />
       </Routes>
 
-      {/* Модальные окна */}
       {backgroundLocation && (
         <Routes>
           <Route
