@@ -1,8 +1,6 @@
 import type { RootState } from '../../services/store';
 import * as userApi from '../../utils/user-api';
-import type { TLoginData, TRegisterData } from '@api';
-import { TOrder, TUser } from '@utils-types';
-import { Nullable, StateError, TUserState } from './types';
+import { TUserState } from './types';
 
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 

@@ -57,18 +57,18 @@ export const BurgerIngredients: FC = () => {
   if (loading) return <Preloader />;
 
   // Отображаем сообщение об ошибке, если произошла ошибка
-  if (error) return <div>Error: {error}</div>;
+  if (error) return <div> Error: {error} </div>;
 
   // Отображаем UI компонент с ингредиентами
   return (
     <BurgerIngredientsUI
       currentTab={activeTab} // Активная вкладка
-      buns={filteredIngredients.buns} // Булочки
-      mains={filteredIngredients.mains} // Начинки
-      sauces={filteredIngredients.sauces} // Соусы
-      titleBunRef={bunRef} // Ref для заголовка секции булочек
-      titleMainRef={mainRef} // Ref для заголовка секции начинок
-      titleSaucesRef={sauceRef} // Ref для заголовка секции соусов
+      buns={filteredIngredients.buns}
+      mains={filteredIngredients.mains}
+      sauces={filteredIngredients.sauces}
+      titleBunRef={bunRef}
+      titleMainRef={mainRef}
+      titleSaucesRef={sauceRef}
       bunsRef={bunInViewRef} // Ref для отслеживания видимости заголовка булочек
       mainsRef={mainInViewRef} // Ref для отслеживания видимости заголовка начинок
       saucesRef={sauceInViewRef} // Ref для отслеживания видимости заголовка соусов

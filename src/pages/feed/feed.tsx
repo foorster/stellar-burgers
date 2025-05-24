@@ -1,22 +1,29 @@
 import { Preloader } from '@ui';
 import { FeedUI } from '@ui-pages';
 import { TOrder } from '@utils-types';
-import { FC } from 'react';
-import { useSelector } from '../../services/store';
+import { FC, useEffect } from 'react';
+import { useSelector, useDispatch } from '../../services/store';
 import {
   getFeedOrders,
   getFeedTotal,
-  getFeedTotalToday
+  getFeedTotalToday,
+  getFeeds
 } from '../../services/feed/slice';
+
 export const Feed: FC = () => {
+  const dispatch = useDispatch();
   const orders: TOrder[] = useSelector(getFeedOrders);
-  const total = useSelector(getFeedTotal);
-  const totalToday = useSelector(getFeedTotalToday);
-  const feed = { total, totalToday };
+
+  useEffect(() => {
+    dispatch(getFeeds());
+  }, [dispatch]);
 
   if (!orders.length) {
+    console.log('Feed: Данные о заказах отсутствуют, отображается Preloader.');
     return <Preloader />;
   }
 
-  <FeedUI orders={orders} handleGetFeeds={() => {}} />;
+  console.log('Feed: Данные о заказах получены, передаются в FeedUI:', orders); // Добавили лог
+
+  return <FeedUI orders={orders} handleGetFeeds={() => dispatch(getFeeds())} />;
 };

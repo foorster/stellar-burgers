@@ -18,7 +18,8 @@ import {
 import { AppHeader, Modal, IngredientDetails, OrderInfo } from '@components';
 import { getIngredients } from '../../services/ingredients/slice';
 import ProtectedRoute from '../../components/protected-route/ProtectedRoute';
-
+import { getCookie } from '../../utils/cookie';
+import { getUser } from '../../services/user/slice';
 const App = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -29,6 +30,10 @@ const App = () => {
 
   useEffect(() => {
     dispatch(getIngredients());
+    const token = getCookie('accessToken');
+    if (token) {
+      dispatch(getUser());
+    }
   }, [dispatch]);
 
   return (

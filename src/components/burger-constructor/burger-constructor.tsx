@@ -36,6 +36,7 @@ export const BurgerConstructor: FC = () => {
     );
     return bunCost + ingredientsCost;
   }, [bun, ingredients]);
+
   const handleOrderClick = () => {
     if (!isAuthenticated) return navigate('/login');
     if (!bun) return;
