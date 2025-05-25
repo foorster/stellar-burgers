@@ -3,7 +3,7 @@ import * as userApi from '../../utils/user-api';
 import { TUserState } from './types';
 
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-
+import { deleteCookie } from '../../utils/cookie';
 const initialState: TUserState = {
   request: false,
   error: null,
@@ -62,10 +62,6 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    userLogout: (state) => {
-      state.user = null;
-      state.isAuthenticated = false;
-    },
     resetError: (state) => {
       state.error = null;
     },
@@ -78,12 +74,13 @@ const userSlice = createSlice({
       .addCase(getRegisterUser.pending, handlePending)
       .addCase(getRegisterUser.rejected, (state, action) => {
         handleRejected(state, action);
-        state.isAuthChecked = false;
+        state.isAuthChecked = true;
       })
       .addCase(getRegisterUser.fulfilled, (state, { payload }) => {
         state.request = false;
         state.user = payload.user;
         state.isAuthenticated = true;
+        state.isAuthChecked = true;
       })
       .addCase(getLoginUser.pending, (state) => {
         state.loginUserRequest = true;
@@ -97,6 +94,7 @@ const userSlice = createSlice({
         state.loginUserRequest = false;
         state.user = payload.user;
         state.isAuthenticated = true;
+        state.isAuthChecked = true;
       })
       .addCase(getUser.pending, (state) => {
         state.isAuthChecked = false;
@@ -122,6 +120,9 @@ const userSlice = createSlice({
         state.request = false;
         state.user = null;
         state.isAuthenticated = false;
+        state.isAuthChecked = true;
+        localStorage.removeItem('refreshToken');
+        deleteCookie('accessToken');
       })
       .addCase(getOrders.pending, handlePending)
       .addCase(getOrders.rejected, handleRejected)
@@ -132,8 +133,7 @@ const userSlice = createSlice({
   }
 });
 
-export const { userLogout, resetError, setAuthChecked } = userSlice.actions;
+export const { resetError, setAuthChecked } = userSlice.actions;
 
 export const selectUserState = (state: RootState) => state.user;
-
 export default userSlice.reducer;
