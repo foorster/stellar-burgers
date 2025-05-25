@@ -1,6 +1,8 @@
-import { setCookie, getCookie } from './cookie';
+import { setCookie, getCookie, deleteCookie } from './cookie';
 import { TIngredient, TOrder, TOrdersData, TUser } from './types';
-
+import { AppDispatch } from '../services/store';
+import { useDispatch } from 'react-redux';
+import { userLogout } from '../services/user/slice';
 const URL = process.env.BURGER_API_URL;
 
 const checkResponse = <T>(res: Response): Promise<T> => {
@@ -8,7 +10,6 @@ const checkResponse = <T>(res: Response): Promise<T> => {
   console.log('Статус:', res.status, res.statusText);
   if (res.ok) {
     return res.json().then((data) => {
-      console.log('Данные:', data);
       console.groupEnd();
       return data;
     });
@@ -53,19 +54,40 @@ export const refreshToken = (): Promise<TRefreshResponse> =>
 export const fetchWithRefresh = async <T>(
   url: RequestInfo,
   options: RequestInit
-) => {
+): Promise<T> => {
   try {
     const res = await fetch(url, options);
     return await checkResponse<T>(res);
   } catch (err) {
-    if ((err as { message: string }).message === 'jwt expired') {
-      const refreshData = await refreshToken();
-      if (options.headers) {
-        (options.headers as { [key: string]: string }).authorization =
-          refreshData.accessToken;
+    console.error('fetchWithRefresh: Ошибка при первоначальном запросе', err);
+    if ((err as { message: string })?.message === 'jwt expired') {
+      try {
+        console.log('fetchWithRefresh: Попытка обновления токена...');
+        const refreshData = await refreshToken();
+        if (options.headers) {
+          (options.headers as { [key: string]: string }).authorization =
+            refreshData.accessToken;
+        }
+        console.log('fetchWithRefresh: Повторный запрос с новым токеном');
+        const res = await fetch(url, options);
+        return await checkResponse<T>(res);
+      } catch (refreshErr) {
+        // Ошибка обновления токена
+        console.error('fetchWithRefresh: Ошибка обновления токена', refreshErr);
+
+        // Очищаем accessToken из cookie и refreshToken из localStorage
+        deleteCookie('accessToken');
+        localStorage.removeItem('refreshToken');
+
+        // Диспатчим action для выхода пользователя (очистка данных в Redux)
+        const dispatch = useDispatch<AppDispatch>();
+        dispatch(userLogout());
+
+        // Перенаправляем на страницу логина
+        //window.location.href = '/login';
+
+        return Promise.reject(refreshErr); // Пробрасываем ошибку дальше
       }
-      const res = await fetch(url, options);
-      return await checkResponse<T>(res);
     } else {
       return Promise.reject(err);
     }
@@ -86,18 +108,13 @@ type TOrdersResponse = TServerResponse<{
   data: TOrder[];
 }>;
 
-export const getIngredientsApi = () => {
-  console.log('getIngredientsApi вызвана');
-  console.log('URL:', URL);
-  return fetch(`${URL}/ingredients`)
-    .then((res) => {
-      console.log('fetch then res:', res);
-      return checkResponse<TIngredientsResponse>(res);
-    })
+export const getIngredientsApi = () =>
+  //console.log('getIngredientsApi вызвана');
+  //console.log('URL:', URL);
+  fetch(`${URL}/ingredients`)
+    .then((res) => checkResponse<TIngredientsResponse>(res))
     .then((data) => {
-      console.log('fetch then data:', data);
       if (data?.success) {
-        console.log('Данные получены успешно:', data.data);
         return data.data;
       }
       console.log('Ошибка: success === false');
@@ -107,7 +124,6 @@ export const getIngredientsApi = () => {
       console.error('fetch catch err:', err);
       return Promise.reject(err);
     });
-};
 
 export const getFeedsApi = () =>
   fetch(`${URL}/orders/all`)
@@ -173,19 +189,35 @@ type TAuthResponse = TServerResponse<{
   user: TUser;
 }>;
 
-export const registerUserApi = (data: TRegisterData) =>
-  fetch(`${URL}/auth/register`, {
+export const registerUserApi = (data: TRegisterData) => {
+  console.log('registerUserApi: Sending registration request', data);
+
+  return fetch(`${URL}/auth/register`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8'
     },
     body: JSON.stringify(data)
   })
-    .then((res) => checkResponse<TAuthResponse>(res))
+    .then((res) => {
+      console.log('registerUserApi: Response received', res);
+      return checkResponse<TAuthResponse>(res);
+    })
     .then((data) => {
-      if (data?.success) return data;
-      return Promise.reject(data);
+      console.log('registerUserApi: Response data', data);
+      if (data?.success) {
+        console.log('registerUserApi: Registration successful', data);
+        return data;
+      } else {
+        console.warn('registerUserApi: Registration failed', data);
+        return Promise.reject(data);
+      }
+    })
+    .catch((error) => {
+      console.error('registerUserApi: Error during registration', error);
+      throw error;
     });
+};
 
 export type TLoginData = {
   email: string;

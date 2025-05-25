@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { LoginUI } from '@ui-pages';
 import { getLoginUser, selectUserState } from '../../services/user/slice'; // Импортируем thunk для логина и селектор состояния пользователя
-import type { AppDispatch } from '../../services/store'; // Импортируем тип AppDispatch для типизации dispatch
+import type { AppDispatch } from '../../services/store';
 
 // Определяем интерфейс для данных формы логина
 interface LoginForm {
@@ -21,7 +21,7 @@ export const Login: FC = () => {
 
   // Используем useSelector для получения error и isAuthenticated из состояния пользователя
   const { error, isAuthenticated } = useSelector(selectUserState);
-
+  console.log('зареган?', isAuthenticated);
   // Используем useDispatch для получения функции dispatch и типизируем ее с помощью AppDispatch
   const dispatch = useDispatch<AppDispatch>();
 

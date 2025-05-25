@@ -24,10 +24,6 @@ export const FeedInfo: FC = () => {
 
   console.log(`FeedInfo: Выполнено заказов за сегодня: ${totalToday}`); // Лог для проверки totalToday
 
-  const { id } = useParams();
-  const ingredientsState = useSelector(getIngredientState);
-  const ingredientData = ingredientsState.ingredients.find((i) => i._id === id);
-
   const readyOrders = getOrders(orders, 'done'); // Готовы
 
   const pendingOrders = getOrders(orders, 'pending'); // Готовятся

@@ -23,19 +23,11 @@ export const getIngredients = createAsyncThunk<TIngredient[], void>(
   async (_, { rejectWithValue }) => {
     try {
       const result = await getIngredientsApi(); // Запрашиваем ингредиенты с сервера
-      console.log(
-        'getIngredients: createAsyncThunk - getIngredientsApi returned:',
-        result
-      );
       return result;
     } catch (error) {
       console.error('getIngredients: createAsyncThunk - ERROR:', error);
       const errorMessage =
         error instanceof Error ? error.message : 'Failed to fetch ingredients'; // Получаем сообщение об ошибке
-      console.log(
-        'getIngredients: createAsyncThunk - Rejecting with value:',
-        errorMessage
-      );
       return rejectWithValue(errorMessage); // Отклоняем санк с сообщением об ошибке
     }
   }
@@ -69,3 +61,6 @@ const ingredientsSlice = createSlice({
 export const getIngredientState = (state: RootState) => state.ingredients;
 
 export default ingredientsSlice.reducer;
+
+export const getIngredientsSelector = (state: RootState) =>
+  state.ingredients.ingredients;
