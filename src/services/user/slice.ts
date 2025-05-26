@@ -47,7 +47,16 @@ export const getOrders = createSimpleThunk(
   userApi.fetchUserOrders
 );
 export const getLogoutUser = createSimpleThunk('logout', userApi.logoutUser);
-
+export const checkUserAuth = createAsyncThunk(
+  'user/checkAuth',
+  async (_, { rejectWithValue }) => {
+    try {
+      return await userApi.fetchUser();
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
 const handlePending = (state: TUserState) => {
   state.request = true;
   state.error = null;
@@ -67,6 +76,10 @@ const userSlice = createSlice({
     },
     setAuthChecked: (state, action: PayloadAction<boolean>) => {
       state.isAuthChecked = action.payload;
+    },
+    userLogout: (state) => {
+      state.user = null;
+      state.isAuthenticated = false;
     }
   },
   extraReducers: (builder) => {
@@ -100,10 +113,23 @@ const userSlice = createSlice({
         state.isAuthChecked = false;
       })
       .addCase(getUser.rejected, (state) => {
+        console.log('getUser.rejected: THIS IS CALLED!');
         state.isAuthChecked = true;
         state.isAuthenticated = false;
       })
       .addCase(getUser.fulfilled, (state, { payload }) => {
+        state.isAuthChecked = true;
+        state.user = payload.user;
+        state.isAuthenticated = true;
+      })
+      .addCase(checkUserAuth.pending, (state) => {
+        state.isAuthChecked = false;
+      })
+      .addCase(checkUserAuth.rejected, (state) => {
+        state.isAuthChecked = true;
+        state.isAuthenticated = false;
+      })
+      .addCase(checkUserAuth.fulfilled, (state, { payload }) => {
         state.isAuthChecked = true;
         state.user = payload.user;
         state.isAuthenticated = true;
@@ -133,7 +159,16 @@ const userSlice = createSlice({
   }
 });
 
-export const { resetError, setAuthChecked } = userSlice.actions;
-
+export const selectUser = (state: RootState) => state.user.user; // Added selector for user
+export const selectIsAuthenticated = (state: RootState) =>
+  state.user.isAuthenticated; // Added selector for isAuthenticated
+export const selectIsAuthChecked = (state: RootState) =>
+  state.user.isAuthChecked; // Added selector for isAuthChecked
+export const selectUserOrders = (state: RootState) => state.user.userOrders; // Added selector for userOrders
+export const selectRequest = (state: RootState) => state.user.request; //Added selector for request
+export const selectLoginUserRequest = (state: RootState) =>
+  state.user.loginUserRequest; //Added selector for loginUserRequest
+export const selectError = (state: RootState) => state.user.error; //Added selector for error
+export const { userLogout, resetError, setAuthChecked } = userSlice.actions;
 export const selectUserState = (state: RootState) => state.user;
 export default userSlice.reducer;
