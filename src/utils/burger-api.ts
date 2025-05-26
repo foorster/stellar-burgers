@@ -54,40 +54,19 @@ export const refreshToken = (): Promise<TRefreshResponse> =>
 export const fetchWithRefresh = async <T>(
   url: RequestInfo,
   options: RequestInit
-): Promise<T> => {
+) => {
   try {
     const res = await fetch(url, options);
     return await checkResponse<T>(res);
   } catch (err) {
-    console.error('fetchWithRefresh: Ошибка при первоначальном запросе', err);
-    if ((err as { message: string })?.message === 'jwt expired') {
-      try {
-        console.log('fetchWithRefresh: Попытка обновления токена...');
-        const refreshData = await refreshToken();
-        if (options.headers) {
-          (options.headers as { [key: string]: string }).authorization =
-            refreshData.accessToken;
-        }
-        console.log('fetchWithRefresh: Повторный запрос с новым токеном');
-        const res = await fetch(url, options);
-        return await checkResponse<T>(res);
-      } catch (refreshErr) {
-        // Ошибка обновления токена
-        console.error('fetchWithRefresh: Ошибка обновления токена', refreshErr);
-
-        // Очищаем accessToken из cookie и refreshToken из localStorage
-        deleteCookie('accessToken');
-        localStorage.removeItem('refreshToken');
-
-        // Диспатчим action для выхода пользователя (очистка данных в Redux)
-        const dispatch = useDispatch<AppDispatch>();
-        dispatch(userLogout());
-
-        // Перенаправляем на страницу логина
-        //window.location.href = '/login';
-
-        return Promise.reject(refreshErr); // Пробрасываем ошибку дальше
+    if ((err as { message: string }).message === 'jwt expired') {
+      const refreshData = await refreshToken();
+      if (options.headers) {
+        (options.headers as { [key: string]: string }).authorization =
+          refreshData.accessToken;
       }
+      const res = await fetch(url, options);
+      return await checkResponse<T>(res);
     } else {
       return Promise.reject(err);
     }
