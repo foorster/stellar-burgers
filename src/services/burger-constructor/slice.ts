@@ -126,6 +126,10 @@ export const burgerConstructorSlice = createSlice({
     },
     resetModal: (state) => {
       state.orderModalData = null; // Чистим модалку
+    },
+    closeOrderModal: (state) => {
+      state.orderRequest = false;
+      state.orderModalData = null;
     }
   },
   extraReducers: (builder) => {
@@ -175,7 +179,9 @@ export const {
   moveIngredientDown,
   resetConstructor,
   setRequest,
-  resetModal
+  resetModal,
+  closeOrderModal
 } = burgerConstructorSlice.actions;
 
 export const constructorReducer = burgerConstructorSlice.reducer;
+export const closeOrderModalReducer = burgerConstructorSlice.reducer;
