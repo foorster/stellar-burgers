@@ -20,9 +20,6 @@ const ProtectedRoute = ({
   const isAuthChecked = useSelector(selectIsAuthChecked);
   const location = useLocation();
 
-  console.log('userState:', userState);
-  console.log('onlyUnAuth:', onlyUnAuth);
-
   if (!userState.user && !onlyUnAuth) {
     return <Navigate to='/login' state={{ from: location }} replace />;
   }

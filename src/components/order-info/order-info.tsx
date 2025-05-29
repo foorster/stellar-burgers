@@ -8,7 +8,6 @@ import { getOrderByNumber, getCurrentOrder } from '../../services/order/slice';
 import { getIngredientsSelector } from '../../services/ingredients/slice';
 
 export const OrderInfo: FC = () => {
-  /** TODO: взять переменные orderData и ingredients из стора */
   const dispatch = useDispatch();
   const orderData = useSelector(getCurrentOrder);
   const ingredients = useSelector(getIngredientsSelector);
@@ -20,7 +19,6 @@ export const OrderInfo: FC = () => {
     }
   }, [dispatch, number]);
 
-  /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
     if (!orderData || !ingredients.length) return null;
 

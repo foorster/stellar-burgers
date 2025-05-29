@@ -7,12 +7,13 @@ import {
   getConstructorState,
   getOrderBurger,
   getOrderModalData,
-  getOrderRequest
+  getOrderRequest,
+  closeOrderModal,
+  setRequest
 } from '../../services/burger-constructor/slice';
 import { selectUserState } from '../../services/user/slice';
 
 export const BurgerConstructor: FC = () => {
-  /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isAuthenticated } = useSelector(selectUserState);
@@ -40,12 +41,12 @@ export const BurgerConstructor: FC = () => {
   const handleOrderClick = () => {
     if (!isAuthenticated) return navigate('/login');
     if (!bun) return;
-    //dispatch(setRequest(true));
+    dispatch(setRequest(true));
     dispatch(getOrderBurger(ingredientIds));
   };
   const handleCloseModal = () => {
-    //dispatch(setRequest(false));
-    //dispatch(resetModal());
+    dispatch(closeOrderModal());
+    navigate('/');
   };
 
   return (

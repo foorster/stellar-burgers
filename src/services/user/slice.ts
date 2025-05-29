@@ -1,9 +1,28 @@
 import type { RootState } from '../../services/store';
 import * as userApi from '../../utils/user-api';
-import { TUserState } from './types';
-
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { deleteCookie } from '../../utils/cookie';
+import type { TRegisterData } from '@api';
+import { TOrder, TUser } from '@utils-types';
+
+export type Nullable<T> = T | null;
+export type StateError = Nullable<string>;
+type TUserStateResponse = Nullable<TUser>;
+type TUserStateRegisterData = Nullable<TRegisterData>;
+type TUserStateAtr = Nullable<TUser>;
+
+export type TUserState = {
+  request: boolean;
+  error: StateError;
+  response: TUserStateResponse;
+  registerData: TUserStateRegisterData;
+  user: TUserStateAtr;
+  userOrders: TOrder[];
+  isAuthChecked: boolean;
+  isAuthenticated: boolean;
+  loginUserRequest: boolean;
+};
+
 const initialState: TUserState = {
   request: false,
   error: null,
@@ -113,7 +132,6 @@ const userSlice = createSlice({
         state.isAuthChecked = false;
       })
       .addCase(getUser.rejected, (state) => {
-        console.log('getUser.rejected: THIS IS CALLED!');
         state.isAuthChecked = true;
         state.isAuthenticated = false;
       })
@@ -159,16 +177,16 @@ const userSlice = createSlice({
   }
 });
 
-export const selectUser = (state: RootState) => state.user.user; // Added selector for user
+export const selectUser = (state: RootState) => state.user.user;
 export const selectIsAuthenticated = (state: RootState) =>
-  state.user.isAuthenticated; // Added selector for isAuthenticated
+  state.user.isAuthenticated;
 export const selectIsAuthChecked = (state: RootState) =>
-  state.user.isAuthChecked; // Added selector for isAuthChecked
-export const selectUserOrders = (state: RootState) => state.user.userOrders; // Added selector for userOrders
-export const selectRequest = (state: RootState) => state.user.request; //Added selector for request
+  state.user.isAuthChecked;
+export const selectUserOrders = (state: RootState) => state.user.userOrders;
+export const selectRequest = (state: RootState) => state.user.request;
 export const selectLoginUserRequest = (state: RootState) =>
-  state.user.loginUserRequest; //Added selector for loginUserRequest
-export const selectError = (state: RootState) => state.user.error; //Added selector for error
+  state.user.loginUserRequest;
+export const selectError = (state: RootState) => state.user.error;
 export const { userLogout, resetError, setAuthChecked } = userSlice.actions;
 export const selectUserState = (state: RootState) => state.user;
 export default userSlice.reducer;

@@ -18,7 +18,6 @@ export const ModalUI: FC<TModalUIProps> = memo(
             className={styles.button}
             type='button'
             onClick={() => {
-              console.log('Клик по крестику');
               onClose();
             }}
           >

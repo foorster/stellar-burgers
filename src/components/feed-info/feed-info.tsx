@@ -22,11 +22,9 @@ export const FeedInfo: FC = () => {
   const total = useSelector(getFeedTotal);
   const totalToday = useSelector(getFeedTotalToday);
 
-  console.log(`FeedInfo: Выполнено заказов за сегодня: ${totalToday}`); // Лог для проверки totalToday
+  const readyOrders = getOrders(orders, 'done');
 
-  const readyOrders = getOrders(orders, 'done'); // Готовы
-
-  const pendingOrders = getOrders(orders, 'pending'); // Готовятся
+  const pendingOrders = getOrders(orders, 'pending');
 
   return (
     <FeedInfoUI

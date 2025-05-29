@@ -15,7 +15,7 @@ export const OrderCard: FC<OrderCardProps> = memo(({ order }) => {
 
   const ingredients: TIngredient[] = useSelector((state: RootState) =>
     getIngredientsSelector(state)
-  ); // Используем правильный селектор
+  );
 
   const orderInfo = useMemo(() => {
     if (!ingredients.length) return null;
