@@ -10,7 +10,7 @@ import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorElement, Modal } from '@components';
 import { Preloader, OrderDetailsUI } from '@ui';
 import { closeOrderModal } from '../../../services/burger-constructor/slice';
-import { useDispatch } from 'react-redux';
+import { useDispatch } from '../../../services/store';
 
 export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
   constructorItems,

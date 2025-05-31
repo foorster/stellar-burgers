@@ -1,9 +1,8 @@
 import { FC, useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from '../../services/store';
 import { LoginUI } from '@ui-pages';
 import { getLoginUser, selectUserState } from '../../services/user/slice';
-import type { AppDispatch } from '../../services/store';
 
 interface LoginForm {
   email: string;
@@ -17,7 +16,7 @@ export const Login: FC = () => {
   });
 
   const { error, isAuthenticated } = useSelector(selectUserState);
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

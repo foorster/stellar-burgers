@@ -1,8 +1,5 @@
 import { setCookie, getCookie, deleteCookie } from './cookie';
 import { TIngredient, TOrder, TOrdersData, TUser } from './types';
-import { AppDispatch } from '../services/store';
-import { useDispatch } from 'react-redux';
-import { getLogoutUser as userLogout } from '../services/user/slice';
 const URL = process.env.BURGER_API_URL;
 
 const checkResponse = <T>(res: Response): Promise<T> => {

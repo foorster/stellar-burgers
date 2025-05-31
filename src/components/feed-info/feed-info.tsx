@@ -2,9 +2,8 @@ import { FC } from 'react';
 
 import { TOrder } from '@utils-types';
 import { FeedInfoUI } from '../ui/feed-info';
-import { getIngredientState } from '../../services/ingredients/slice';
-import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useSelector } from '../../services/store';
+
 import {
   getFeedOrders,
   getFeedTotal,

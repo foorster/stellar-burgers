@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from '../../services/store';
 import { ProfileUI } from '@ui-pages';
 import { Preloader } from '@ui';
 import {
@@ -16,7 +16,7 @@ interface ProfileFormState {
 }
 
 export const Profile: FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch();
   const { user, request: loading } = useSelector(selectUserState);
   const [formValue, setFormValue] = useState<ProfileFormState>({
     name: user?.name || '',

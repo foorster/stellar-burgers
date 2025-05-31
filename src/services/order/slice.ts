@@ -25,10 +25,7 @@ export const initialState: TOrderState = {
 // Получение одного заказа по номеру
 export const getOrderByNumber = createAsyncThunk(
   'orders/getOrderByNumber',
-  async (number: number) => {
-    const response = await getOrderByNumberApi(number);
-    return response;
-  }
+  getOrderByNumberApi
 );
 
 // Получение списка всех заказов
