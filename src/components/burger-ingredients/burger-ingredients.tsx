@@ -1,67 +1,69 @@
 import { useState, useRef, useEffect, FC } from 'react';
 import { useInView } from 'react-intersection-observer';
-
+import { useSelector } from '../../services/store';
 import { TTabMode } from '@utils-types';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
+import { Preloader } from '@ui';
+import { getIngredientState } from '../../services/ingredients/slice';
 
 export const BurgerIngredients: FC = () => {
-  /** TODO: взять переменные из стора */
-  const buns = [];
-  const mains = [];
-  const sauces = [];
+  const { ingredients, loading, error } = useSelector(getIngredientState);
 
-  const [currentTab, setCurrentTab] = useState<TTabMode>('bun');
-  const titleBunRef = useRef<HTMLHeadingElement>(null);
-  const titleMainRef = useRef<HTMLHeadingElement>(null);
-  const titleSaucesRef = useRef<HTMLHeadingElement>(null);
+  const [activeTab, setActiveTab] = useState<TTabMode>('bun');
 
-  const [bunsRef, inViewBuns] = useInView({
-    threshold: 0
-  });
+  const bunRef = useRef<HTMLHeadingElement>(null);
+  const mainRef = useRef<HTMLHeadingElement>(null);
+  const sauceRef = useRef<HTMLHeadingElement>(null);
 
-  const [mainsRef, inViewFilling] = useInView({
-    threshold: 0
-  });
+  // Ref и хук useInView для отслеживания видимости заголовков секций
+  const [bunInViewRef, bunInView] = useInView({ threshold: 0 }); // threshold: 0 - как только элемент появляется, он считается видимым
+  const [mainInViewRef, mainInView] = useInView({ threshold: 0 });
+  const [sauceInViewRef, sauceInView] = useInView({ threshold: 0 });
 
-  const [saucesRef, inViewSauces] = useInView({
-    threshold: 0
-  });
-
-  useEffect(() => {
-    if (inViewBuns) {
-      setCurrentTab('bun');
-    } else if (inViewSauces) {
-      setCurrentTab('sauce');
-    } else if (inViewFilling) {
-      setCurrentTab('main');
-    }
-  }, [inViewBuns, inViewFilling, inViewSauces]);
-
-  const onTabClick = (tab: string) => {
-    setCurrentTab(tab as TTabMode);
-    if (tab === 'bun')
-      titleBunRef.current?.scrollIntoView({ behavior: 'smooth' });
-    if (tab === 'main')
-      titleMainRef.current?.scrollIntoView({ behavior: 'smooth' });
-    if (tab === 'sauce')
-      titleSaucesRef.current?.scrollIntoView({ behavior: 'smooth' });
+  const filteredIngredients = {
+    buns: ingredients.filter((i) => i.type === 'bun'),
+    mains: ingredients.filter((i) => i.type === 'main'),
+    sauces: ingredients.filter((i) => i.type === 'sauce')
   };
 
-  return null;
+  // useEffect для обновления активной вкладки при изменении видимости заголовков секций
+  useEffect(() => {
+    if (bunInView)
+      setActiveTab('bun'); // Если заголовок булочек виден, делаем активной вкладку "bun"
+    else if (sauceInView) setActiveTab('sauce');
+    else if (mainInView) setActiveTab('main');
+  }, [bunInView, mainInView, sauceInView]);
+
+  // Обработчик клика по табу
+  const handleTabClick = (tab: string) => {
+    const tabMode = tab as TTabMode;
+    setActiveTab(tabMode);
+
+    // Определяем ref для скролла
+    const ref =
+      tabMode === 'bun' ? bunRef : tabMode === 'main' ? mainRef : sauceRef;
+
+    // Скроллим к выбранному заголовку секции
+    ref.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  if (loading) return <Preloader />;
+
+  if (error) return <div> Error: {error} </div>;
 
   return (
     <BurgerIngredientsUI
-      currentTab={currentTab}
-      buns={buns}
-      mains={mains}
-      sauces={sauces}
-      titleBunRef={titleBunRef}
-      titleMainRef={titleMainRef}
-      titleSaucesRef={titleSaucesRef}
-      bunsRef={bunsRef}
-      mainsRef={mainsRef}
-      saucesRef={saucesRef}
-      onTabClick={onTabClick}
+      currentTab={activeTab}
+      buns={filteredIngredients.buns}
+      mains={filteredIngredients.mains}
+      sauces={filteredIngredients.sauces}
+      titleBunRef={bunRef}
+      titleMainRef={mainRef}
+      titleSaucesRef={sauceRef}
+      bunsRef={bunInViewRef}
+      mainsRef={mainInViewRef}
+      saucesRef={sauceInViewRef}
+      onTabClick={handleTabClick}
     />
   );
 };

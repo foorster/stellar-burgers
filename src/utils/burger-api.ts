@@ -1,10 +1,23 @@
-import { setCookie, getCookie } from './cookie';
+import { setCookie, getCookie, deleteCookie } from './cookie';
 import { TIngredient, TOrder, TOrdersData, TUser } from './types';
-
 const URL = process.env.BURGER_API_URL;
 
-const checkResponse = <T>(res: Response): Promise<T> =>
-  res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
+const checkResponse = <T>(res: Response): Promise<T> => {
+  console.group(`[API] Ответ от сервера: ${res.url}`);
+  console.log('Статус:', res.status, res.statusText);
+  if (res.ok) {
+    return res.json().then((data) => {
+      console.groupEnd();
+      return data;
+    });
+  } else {
+    return res.json().then((err) => {
+      console.error('Ошибка при запросе:', err);
+      console.groupEnd();
+      return Promise.reject(err);
+    });
+  }
+};
 
 type TServerResponse<T> = {
   success: boolean;
@@ -72,11 +85,20 @@ type TOrdersResponse = TServerResponse<{
 }>;
 
 export const getIngredientsApi = () =>
+  //console.log('getIngredientsApi вызвана');
+  //console.log('URL:', URL);
   fetch(`${URL}/ingredients`)
     .then((res) => checkResponse<TIngredientsResponse>(res))
     .then((data) => {
-      if (data?.success) return data.data;
+      if (data?.success) {
+        return data.data;
+      }
+      console.log('Ошибка: success === false');
       return Promise.reject(data);
+    })
+    .catch((err) => {
+      console.error('fetch catch err:', err);
+      return Promise.reject(err);
     });
 
 export const getFeedsApi = () =>
@@ -143,19 +165,35 @@ type TAuthResponse = TServerResponse<{
   user: TUser;
 }>;
 
-export const registerUserApi = (data: TRegisterData) =>
-  fetch(`${URL}/auth/register`, {
+export const registerUserApi = (data: TRegisterData) => {
+  console.log('registerUserApi: Sending registration request', data);
+
+  return fetch(`${URL}/auth/register`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8'
     },
     body: JSON.stringify(data)
   })
-    .then((res) => checkResponse<TAuthResponse>(res))
+    .then((res) => {
+      console.log('registerUserApi: Response received', res);
+      return checkResponse<TAuthResponse>(res);
+    })
     .then((data) => {
-      if (data?.success) return data;
-      return Promise.reject(data);
+      console.log('registerUserApi: Response data', data);
+      if (data?.success) {
+        console.log('registerUserApi: Registration successful', data);
+        return data;
+      } else {
+        console.warn('registerUserApi: Registration failed', data);
+        return Promise.reject(data);
+      }
+    })
+    .catch((error) => {
+      console.error('registerUserApi: Error during registration', error);
+      throw error;
     });
+};
 
 export type TLoginData = {
   email: string;
