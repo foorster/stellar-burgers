@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">72.72% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>48/66</span>
+                <span class='fraction'>66/66</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">87.5% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>7/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
-                <span class="quiet">Branches</span>
-                <span class='fraction'>1/1</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">33.33% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/3</span>
+                <span class='fraction'>3/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">72.72% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>48/66</span>
+                <span class='fraction'>66/66</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -152,16 +152,16 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -173,20 +173,17 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -194,7 +191,10 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getIngredientsApi } from '../../utils/burger-api';
 import type { TIngredient } from '@utils-types';
@@ -218,16 +218,16 @@ const initialState: IngredientsState = {
 export const getIngredients = createAsyncThunk&lt;TIngredient[], void&gt;(
   'ingredients/getIngredients', // Уникальный идентификатор санка
   async (_, { rejectWithValue }) =&gt; {
-<span class="cstat-no" title="statement not covered" >    try {</span>
-<span class="cstat-no" title="statement not covered" >      const result = await getIngredientsApi(); // Запрашиваем ингредиенты с сервера</span>
-<span class="cstat-no" title="statement not covered" >      return result;</span>
-<span class="cstat-no" title="statement not covered" >    } catch (error) {</span>
-<span class="cstat-no" title="statement not covered" >      console.error('getIngredients: createAsyncThunk - ERROR:', error);</span>
-<span class="cstat-no" title="statement not covered" >      const errorMessage =</span>
-<span class="cstat-no" title="statement not covered" >        error instanceof Error ? error.message : 'Failed to fetch ingredients'; // Получаем сообщение об ошибке</span>
-<span class="cstat-no" title="statement not covered" >      return rejectWithValue(errorMessage); // Отклоняем санк с сообщением об ошибке</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+    try {
+      const result = await getIngredientsApi(); // Запрашиваем ингредиенты с сервера
+      return result;
+    } catch (error) {
+      console.error('getIngredients: createAsyncThunk - ERROR:', error);
+      const errorMessage =
+        error instanceof Error ? error.message <span class="branch-0 cbranch-no" title="branch not covered" >: 'Failed to fetch ingredients';</span> // Получаем сообщение об ошибке
+      return rejectWithValue(errorMessage); // Отклоняем санк с сообщением об ошибке
+    }
+  }
 );
 &nbsp;
 // Создаем slice для управления состоянием ингредиентов
@@ -239,28 +239,28 @@ const ingredientsSlice = createSlice({
     // Обрабатываем состояния асинхронного санка
     builder
       .addCase(getIngredients.pending, (state) =&gt; {
-<span class="cstat-no" title="statement not covered" >        state.loading = true;</span>
-<span class="cstat-no" title="statement not covered" >        state.error = null;</span>
+        state.loading = true;
+        state.error = null;
       })
       .addCase(getIngredients.rejected, (state, action) =&gt; {
-<span class="cstat-no" title="statement not covered" >        state.loading = false;</span>
-<span class="cstat-no" title="statement not covered" >        state.error = action.payload as string;</span>
+        state.loading = false;
+        state.error = action.payload as string;
       })
       .addCase(getIngredients.fulfilled, (state, action) =&gt; {
-<span class="cstat-no" title="statement not covered" >        state.loading = false;</span>
-<span class="cstat-no" title="statement not covered" >        state.ingredients = action.payload;</span>
-<span class="cstat-no" title="statement not covered" >        state.error = null;</span>
+        state.loading = false;
+        state.ingredients = action.payload;
+        state.error = null;
       });
   }
 });
 &nbsp;
 // Селектор для получения состояния ингредиентов из корневого состояния
-export const getIngredientState = <span class="fstat-no" title="function not covered" >(state: RootState) =&gt; state.</span>ingredients;
+export const getIngredientState = (state: RootState) =&gt; state.ingredients;
 &nbsp;
 export default ingredientsSlice.reducer;
 &nbsp;
-export const getIngredientsSelector = <span class="fstat-no" title="function not covered" >(state: RootState) =&gt;</span>
-<span class="cstat-no" title="statement not covered" >  state.ingredients.ingredients;</span>
+export const getIngredientsSelector = (state: RootState) =&gt;
+  state.ingredients.ingredients;
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -268,7 +268,7 @@ export const getIngredientsSelector = <span class="fstat-no" title="function not
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-06-10T20:06:42.155Z
+                at 2025-06-10T20:37:44.916Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
