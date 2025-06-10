@@ -10,7 +10,7 @@ import {
   createSelector
 } from '@reduxjs/toolkit';
 import type { TConstructorIngredient, TIngredient } from '@utils-types';
-import { orderBurgerApi } from '@api';
+import { orderBurgerApi } from '../../utils/burger-api';
 import type { RootState } from '../../services/store';
 
 interface ConstructorState {
