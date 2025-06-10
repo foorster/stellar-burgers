@@ -1,13 +1,13 @@
 import {
   getOrdersApi,
-  getUserApi,
-  loginUserApi,
-  logoutApi,
   registerUserApi,
   type TLoginData,
   type TRegisterData,
-  updateUserApi
-} from '@api';
+  updateUserApi,
+  getUserApi,
+  loginUserApi,
+  logoutApi
+} from '../utils/burger-api';
 import { deleteCookie, setCookie } from './cookie';
 
 export type TUser = {
