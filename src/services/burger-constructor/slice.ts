@@ -24,7 +24,7 @@ interface ConstructorState {
   error: string | null;
 }
 
-const initialState: ConstructorState = {
+export const initialState: ConstructorState = {
   constructorItems: {
     bun: null,
     ingredients: []
@@ -42,7 +42,7 @@ export const getOrderBurger = createAsyncThunk(
 );
 
 // Функция для перемещения ингредиента в массиве
-const moveIngredient = (
+export const moveIngredient = (
   ingredients: TConstructorIngredient[],
   from: number,
   to: number
