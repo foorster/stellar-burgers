@@ -5,7 +5,7 @@ import {
   SerializedError
 } from '@reduxjs/toolkit';
 import { RootState } from '../store';
-import { getOrdersApi, getOrderByNumberApi } from '@api';
+import { getOrdersApi, getOrderByNumberApi } from '../../utils/burger-api';
 
 // Описывает, как выглядит состояние для заказов в Redux сторе
 export type TOrderState = {

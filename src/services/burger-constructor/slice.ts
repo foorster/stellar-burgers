@@ -10,7 +10,7 @@ import {
   createSelector
 } from '@reduxjs/toolkit';
 import type { TConstructorIngredient, TIngredient } from '@utils-types';
-import { orderBurgerApi } from '@api';
+import { orderBurgerApi } from '../../utils/burger-api';
 import type { RootState } from '../../services/store';
 
 interface ConstructorState {
@@ -24,7 +24,7 @@ interface ConstructorState {
   error: string | null;
 }
 
-const initialState: ConstructorState = {
+export const initialState: ConstructorState = {
   constructorItems: {
     bun: null,
     ingredients: []
@@ -42,7 +42,7 @@ export const getOrderBurger = createAsyncThunk(
 );
 
 // Функция для перемещения ингредиента в массиве
-const moveIngredient = (
+export const moveIngredient = (
   ingredients: TConstructorIngredient[],
   from: number,
   to: number
