@@ -26,6 +26,8 @@
 - ESLint
 - Prettier
 - Babel
+  
+![в гиф](https://github.com/user-attachments/assets/098255f9-1553-4e93-80d4-a62eb560819f)
 
 ## Запуск проекта
 
